@@ -9,7 +9,7 @@ void setup() {
 }
 
 void loop() {
-  delay(1000);  // change refresh time
+  delay(5000);  // change refresh time
 
   int networks = WiFi.scanNetworks();
   
@@ -18,14 +18,17 @@ void loop() {
   } 
 
   else {
-    Serial.println("-----------------------------------------------------");
-    Serial.println("  SSID                               | Signal Strength (dBm)");
-    Serial.println("-----------------------------------------------------");
+    Serial.println("-----------------------------------------------------------------------------------");
+    Serial.println("  SSID                              | Strength | MAC Adress       | EncrytionType");
+    Serial.println("-----------------------------------------------------------------------------------");
 
     for (int i = 0; i < networks; ++i) {
 
       String ssid = WiFi.SSID(i);  
       int rssi = WiFi.RSSI(i);     
+      String bssid = WiFi.BSSIDstr(i);
+      int encryptionType = WiFi.encryptionType(i);
+
 
       int spaceCount = 30 - ssid.length();
       String spaces = "";
@@ -41,7 +44,28 @@ void loop() {
       Serial.print(ssid);
       Serial.print(spaces);
       Serial.print(" | ");
-      Serial.println(String(rssi) + " dBm");
+      Serial.print(String(rssi) + " dBm");
+      Serial.print(" | ");
+      Serial.print(bssid);
+      Serial.print(" | ");
+      Serial.println(encryptionTypeToStr(encryptionType));
     }
+  }
+}
+
+String encryptionTypeToStr(int encryptionType) {
+  switch (encryptionType) {
+    case ENC_TYPE_NONE:
+      return "Open";
+    case ENC_TYPE_WEP:
+      return "WEP";
+    case ENC_TYPE_TKIP:
+      return "WPA/TKIP";
+    case ENC_TYPE_CCMP:
+      return "WPA2/CCMP";
+    case ENC_TYPE_AUTO:
+      return "Auto";
+    default:
+      return "Unknown";
   }
 }
