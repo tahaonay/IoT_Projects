@@ -18,18 +18,30 @@ void loop() {
   } 
 
   else {
-    Serial.print(networks);
-    Serial.println(" WiFi networks found:");
+    Serial.println("-----------------------------------------------------");
+    Serial.println("  SSID                               | Signal Strength (dBm)");
+    Serial.println("-----------------------------------------------------");
 
     for (int i = 0; i < networks; ++i) {
+
+      String ssid = WiFi.SSID(i);  
+      int rssi = WiFi.RSSI(i);     
+
+      int spaceCount = 30 - ssid.length();
+      String spaces = "";
+
+      for (int j = 0; j < spaceCount; ++j) {
+        spaces += " ";
+      }
+
+
+      Serial.print(" ");
       Serial.print(i + 1);
-      Serial.print(": ");
-      Serial.print(WiFi.SSID(i));
-      Serial.print(" (Sinyal Gücü: ");
-      Serial.print(WiFi.RSSI(i));
-      Serial.println(" dBm)");
+      Serial.print(" | ");
+      Serial.print(ssid);
+      Serial.print(spaces);
+      Serial.print(" | ");
+      Serial.println(String(rssi) + " dBm");
     }
-    
-    Serial.println("-----------------------------------------------------");
   }
 }
